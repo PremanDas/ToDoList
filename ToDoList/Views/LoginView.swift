@@ -9,6 +9,11 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject var viewModel = LoginViewModel()
+    @FocusState private var focusField: FocusedField?
+    
+    enum FocusedField {
+        case email, password
+    }
     
     var body: some View {
         NavigationStack {
@@ -18,6 +23,7 @@ struct LoginView: View {
                            subtitle: "Get things done",
                            angle: 15,
                            backgroundColor: .pink)
+                .padding(.top, 50)
                 
                 Form {
                     
@@ -31,9 +37,11 @@ struct LoginView: View {
                         .textInputAutocapitalization(.never)
                         .listRowSeparator(.hidden)
                         .padding(.top, 8)
+                        .focused($focusField, equals: .email)
                     SecureField("Password", text: $viewModel.password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .listRowSeparator(.hidden)
+                        .focused($focusField, equals: .password)
                     
                     TLButton(title: "Login",
                              background: .blue) {
@@ -43,7 +51,8 @@ struct LoginView: View {
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
                 .padding()
-                .offset(y: -50)
+                .defaultFocus($focusField, .email)
+                .offset(y: -80)
                 // Create Account
                 VStack {
                     Text("New around here?")
@@ -54,6 +63,7 @@ struct LoginView: View {
                 
                 Spacer()
             }
+            .ignoresSafeArea(.all)
         }
     }
 }
